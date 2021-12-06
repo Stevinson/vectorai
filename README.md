@@ -44,7 +44,20 @@ NB. The following restrictions apply:
 
 ## Setup Instructions
 
-You must have Docker and docker-compose installed. Then the following command needs to be run.
+You must have Docker and docker-compose installed. 
+
+One piece of manual path setting needs to be done due to a seeming incompatibility with 
+relative paths. In `dagster.yaml` the following lines need to be changed to represent
+your filesystem.
+
+```
+# NB! These need to be manually set to your filesystem
+- /Users/edward/github/vector_ai/src:/opt/dagster/app/src
+- /Users/edward/github/vector_ai/models:/opt/dagster/app/models
+- /Users/edward/github/vector_ai/data:/opt/dagster/app/data
+```
+
+Then the following command needs to be run.
 
 ```
 docker-compose up

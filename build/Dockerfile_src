@@ -1,0 +1,19 @@
+FROM python:3.7-slim
+
+RUN apt-get update
+RUN apt-get -y upgrade
+RUN apt-get install -yq --no-install-recommends vim
+RUN pip3 install cython wheel setuptools dagit dagster dagster-cron dagster-docker dagster-postgres dagstermill
+RUN pip3 install kafka-python Keras mlflow numpy pandas scipy tensorboard tensorflow seaborn tensorflow_io
+
+WORKDIR /opt/dagster/app
+
+RUN mkdir /opt/dagster/app/src
+RUN mkdir /opt/dagster/app/data
+RUN mkdir /opt/dagster/app/models
+
+COPY repo.py /opt/dagster/app
+
+EXPOSE 4000
+
+CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-f", "repo.py"]

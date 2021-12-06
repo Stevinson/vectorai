@@ -8,7 +8,6 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
-build/
 develop-eggs/
 dist/
 downloads/
@@ -59,7 +58,6 @@ target/
 # DotEnv configuration
 
 # Database
-*.db
 *.rdb
 
 # Pycharm
@@ -73,9 +71,6 @@ target/
 
 # Jupyter NB Checkpoints
 .ipynb_checkpoints/
-
-# exclude data from source control by default
-/data/
 
 # Mac OS-specific storage files
 .DS_Store
