@@ -1,0 +1,6 @@
+ops:
+  generate_stream:
+    config:
+      path_stream_sample: "/opt/dagster/app/data/external/mnist/stream_sample.p"
+      topic: 'DataTopic'
+      kafka_ip: "kafka:9092"

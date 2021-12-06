@@ -1,0 +1,50 @@
+[tool.poetry]
+name = "vectorai"
+version = "0.0.1"
+authors = ["Edward Stevinson <edward@hotmail.com>"]
+description = "Interview Project"
+
+[tool.poetry.dependencies]
+bios = "*"
+dagit = ">=0.13.9"
+dagster = ">=0.13.9"
+dagster-postgres = ">=0.13.9"
+dagstermill = ">=0.13.9"
+jupyter = "1.0.0"                               # BSD
+kafka-python = "*"
+keras = "*"
+matplotlib = "3.4.3"                            # PSF
+mlflow = "1.15.0"
+pandas = ">=1.1.4"
+Pillow = "8.4.0"
+psycopg2-binary = "2.8.6"                       # GNU
+pySqsListener = "0.8.7"                         # Apache
+python = "3.9.4"
+python-binary-memcached = "0.30.1"              # MIT
+seaborn = "0.11.2"				                # BSD
+sklearn = "*"
+SQLAlchemy = "1.3.24"                           # MIT
+SQLAlchemy-Utils = "0.37.8"                     # BSD
+tensorflow = "*"
+tensorflow-io = "*"
+scipy = "1.7.3"
+
+[tool.poetry.dev-dependencies]
+asynctest = "0.13.0"                            # Apache 2.0
+black = "19.10b0"                               # MIT
+isort = "4.3.4"                                 # MIT
+factory-boy = "3.2.0"
+jupyter = "1.0.0"
+moto = "2.2.8"                                  # Apache
+pylint = "2.6.0"                                # GPL
+pylint-quotes = "0.2.1"                         # MIT
+pytest = "6.2.1"                                # MIT
+pytest-cov = "2.10.1"                           # MIT
+pytest-env = "^0.6.2"
+pytest-asyncio = "0.15.1"                       # MIT
+pytest-pylint = "0.18.0"                        # MIT
+pytest-xdist = "2.2.0"                          # MIT
+
+[build-system]
+requires = [ "setuptools>=40.8.0", "wheel", "tomlkit", "poetry>=0.12.16" ]
+build-backend = "poetry.masonry.api"

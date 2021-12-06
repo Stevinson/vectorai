@@ -1,0 +1,77 @@
+run_storage:
+  module: dagster_postgres.run_storage
+  class: PostgresRunStorage
+  config:
+    postgres_db:
+      hostname: dagster_postgresql
+      db_name:
+        env: DAGSTER_POSTGRES_DB
+      password:
+        env: DAGSTER_POSTGRES_PASSWORD
+      username:
+        env: DAGSTER_POSTGRES_USER
+      port: 5432
+
+event_log_storage:
+  module: dagster_postgres.event_log
+  class: PostgresEventLogStorage
+  config:
+    postgres_db:
+      hostname: dagster_postgresql
+      db_name:
+        env: DAGSTER_POSTGRES_DB
+      password:
+        env: DAGSTER_POSTGRES_PASSWORD
+      username:
+        env: DAGSTER_POSTGRES_USER
+      port: 5432
+
+scheduler:
+  module: dagster.core.scheduler
+  class: DagsterDaemonScheduler
+
+schedule_storage:
+  module: dagster_postgres.schedule_storage
+  class: PostgresScheduleStorage
+  config:
+    postgres_db:
+      hostname: dagster_postgresql
+      db_name:
+        env: DAGSTER_POSTGRES_DB
+      password:
+        env: DAGSTER_POSTGRES_PASSWORD
+      username:
+        env: DAGSTER_POSTGRES_USER
+      port: 5432
+
+run_launcher:
+  module: dagster_docker
+  class: DockerRunLauncher
+  config:
+    env_vars:
+      - DAGSTER_POSTGRES_USER
+      - DAGSTER_POSTGRES_PASSWORD
+      - DAGSTER_POSTGRES_DB
+    network: dagster_network
+    container_kwargs:
+      volumes:
+        - src:/opt/dagster/app/src
+        - models:/opt/dagster/app/models
+        - data:/opt/dagster/app/data
+
+run_coordinator:
+  module: dagster.core.run_coordinator
+  class: QueuedRunCoordinator
+
+local_artifact_storage:
+  module: dagster.core.storage.root
+  class: LocalArtifactStorage
+  config:
+    base_dir: "/opt/dagster/local/"
+
+telemetry:
+  enabled: false
+
+
+
+

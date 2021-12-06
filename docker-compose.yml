@@ -1,0 +1,149 @@
+version: "3.7"
+
+services:
+  # Postgres db for dagster run storage, schedule storage, and event log storage.
+  dagster_postgresql:
+    image: postgres:11
+    container_name: dagster_postgresql
+    env_file: build/.env.dagster.db
+    networks:
+      - dagster_network
+
+  # Postgres db for predictions
+  predictions_postgresql:
+    build:
+      context: .
+      dockerfile: build/Dockerfile_db
+    restart: always
+    container_name: predictions_postgresql
+    env_file: build/.env.db
+    ports:
+      - "5431:6666"
+    networks:
+      - dagster_network
+
+  # gRPC server that loads and executes user code in both dagit and dagster-daemon.
+  # Setting DAGSTER_CURRENT_IMAGE to its own image, we tell the
+  # run launcher to use this same image when launching runs in a new container as well.
+  # Multiple containers like this can be deployed separately - each just needs to run on
+  # its own port, and have its own entry in the workspace.yaml file that's loaded by dagit.
+  dagster_src:
+    build:
+      context: .
+      dockerfile: build/Dockerfile_src
+    container_name: dagster_src
+    image: dagster_src_image
+    restart: always
+    volumes:
+      - ./src:/opt/dagster/app/src
+      - ./models:/opt/dagster/app/models
+      - ./data:/opt/dagster/app/data
+    environment:
+      DAGSTER_POSTGRES_USER: "vectoraiuser"
+      DAGSTER_POSTGRES_PASSWORD: "password"
+      DAGSTER_POSTGRES_DB: "dagster_postgres"
+      DAGSTER_CURRENT_IMAGE: "dagster_src_image"
+    networks:
+      - dagster_network
+
+  # Service that runs Dagit, which loads user code from the user code container.
+  dagit:
+    build:
+      context: .
+      dockerfile: build/Dockerfile_dagster
+    entrypoint:
+      - dagit
+      - -h
+      - "0.0.0.0"
+      - -p
+      - "3000"
+      - -w
+      - workspace.yaml
+    container_name: dagit
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    environment:
+      DAGSTER_POSTGRES_USER: "vectoraiuser"
+      DAGSTER_POSTGRES_PASSWORD: "password"
+      DAGSTER_POSTGRES_DB: "dagster_postgres"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - dagster_network
+    depends_on:
+      - dagster_postgresql
+      - dagster_src
+
+  # This service runs the dagster-daemon process, which is responsible for taking runs
+  # off of the queue and launching them, as well as creating runs from schedules or sensors.
+  dagster_daemon:
+    build:
+      context: .
+      dockerfile: build/Dockerfile_dagster
+    entrypoint:
+      - dagster-daemon
+      - run
+    container_name: dagster_daemon
+    restart: on-failure
+    environment:
+      DAGSTER_POSTGRES_USER: "vectoraiuser"
+      DAGSTER_POSTGRES_PASSWORD: "password"
+      DAGSTER_POSTGRES_DB: "dagster_postgres"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - dagster_network
+    depends_on:
+      - dagster_postgresql
+      - dagster_src
+
+  # Zookeeper stores metadata about the Kafka cluster
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+    networks:
+      - dagster_network
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    restart: always
+    ports:
+      - 9094:9094
+    depends_on:
+      - zookeeper
+    links:
+      - zookeeper:zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,OUTSIDE://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,OUTSIDE://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_CREATE_TOPICS: "DataTopic:1:1"
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - dagster_network
+
+  # MLFlow service for logging ml parameters
+  mlflow:
+    build:
+      context: .
+      dockerfile: build/Dockerfile_mlflow
+    container_name: mlflow
+    ports:
+        - "5000:5000"
+    command: 'mlflow server --backend-store-uri ./mlflow --host 0.0.0.0 --port 5000'
+    networks:
+      - dagster_network
+
+networks:
+  dagster_network:
+    driver: bridge
+    name: dagster_network

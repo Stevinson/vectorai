@@ -1,0 +1,13 @@
+ops:
+  preprocess_and_split:
+    config:
+      data_path: "/opt/dagster/app/data/external/mnist/"
+      img_rows: 32
+      img_cols: 32
+  train:
+    config:
+      initial_model_path: "/opt/dagster/app/models/mnist/initial_model.H5"
+      num_classes: 10
+      batch_size: 120
+      epochs: 20
+      mlflow_address: "http://mlflow:5000"

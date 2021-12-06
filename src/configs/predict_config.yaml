@@ -1,0 +1,11 @@
+ops:
+  stream_and_predict:
+    config:
+      topic: 'DataTopic'
+      server: "kafka:9094"
+      batch_size: 10
+      path_current_model: '/opt/dagster/app/models/mnist/initial_model.H5'
+resources:
+  db:
+    config:
+      conn_str: "postgresql://vectoraiuser:password@predictions_postgresql:6666/predictions_postgresql"
