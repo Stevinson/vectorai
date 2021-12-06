@@ -44,7 +44,7 @@ NB. The following restrictions apply:
 
 ## Setup Instructions
 
-You must have Docker and docker-compose installed. 
+You must have Docker, docker-compose and git LFS installed. 
 
 One piece of manual path setting needs to be done due to a seeming incompatibility with 
 relative paths. In `dagster.yaml` the following lines need to be changed to represent
@@ -82,6 +82,15 @@ ensure that Zookeeper does not cause an error before restarting the docker conta
 ## Debugging
 
 * If you see a `ChildProcessCrashException` you will need to increase Docker's memory settings
+* If git lfs does not download the data, it can be fetched by running `src/data_helpers.py`. This 
+  will require the environment to be created with:
+```
+conda env create
+conda activate vectorai
+pip install poetry 
+poetry config virtualenvs.create false --local
+poetry install
+```
 
 
 Project Organization 

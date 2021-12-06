@@ -4,7 +4,8 @@ import pickle
 import numpy as np
 import tensorflow as tf
 from keras.datasets import mnist
-from PIL import Image
+
+from src.settings import EXTERNAL_DATA_DIR
 
 
 def download_mnist():
@@ -40,22 +41,16 @@ def download_mnist():
     val_set = [x_val, y_val]
 
     pickle.dump(
-        stream_sample,
-        open(
-            "/Users/edward/github/vector_ai/data/external/mnist/stream_sample.p", "wb"
-        ),
+        stream_sample, open(str(EXTERNAL_DATA_DIR / "mnist/stream_sample.p"), "wb"),
     )
     pickle.dump(
-        test_set,
-        open("/Users/edward/github/vector_ai/data/external/mnist/test_set.p", "wb"),
+        test_set, open(str(EXTERNAL_DATA_DIR / "mnist/test_set.p"), "wb"),
     )
     pickle.dump(
-        train_set,
-        open("/Users/edward/github/vector_ai/data/external/mnist/train_set.p", "wb"),
+        train_set, open(str(EXTERNAL_DATA_DIR / "mnist/train_set.p"), "wb"),
     )
     pickle.dump(
-        val_set,
-        open("/Users/edward/github/vector_ai/data/external/mnist/val_set.p", "wb"),
+        val_set, open(str(EXTERNAL_DATA_DIR / "mnist/val_set.p"), "wb"),
     )
 
 
@@ -71,8 +66,8 @@ def download_cifar10_fashion():
     x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
 
     x_train, x_val, y_train, y_val = (
-        x_train[:40000],
-        x_train[40000:],
+        x_train[:25000],
+        x_train[25000:],
         y_train[:40000],
         y_train[40000:],
     )
@@ -94,23 +89,18 @@ def download_cifar10_fashion():
     val_set = [x_val, y_val]
 
     pickle.dump(
-        stream_sample,
-        open(
-            "/Users/edward/github/vector_ai/data/external/cifar10/stream_sample.p", "wb"
-        ),
+        stream_sample, open(str(EXTERNAL_DATA_DIR / "cifar10/stream_sample.p"), "wb"),
     )
     pickle.dump(
-        test_set,
-        open("/Users/edward/github/vector_ai/data/external/cifar10/test_set.p", "wb"),
+        test_set, open(str(EXTERNAL_DATA_DIR / "cifar10/test_set.p"), "wb"),
     )
     pickle.dump(
-        train_set,
-        open("/Users/edward/github/vector_ai/data/external/cifar10/train_set.p", "wb"),
+        train_set, open(str(EXTERNAL_DATA_DIR / "cifar10/train_set.p"), "wb"),
     )
     pickle.dump(
-        val_set,
-        open("/Users/edward/github/vector_ai/data/external/cifar10/val_set.p", "wb"),
+        val_set, open(str(EXTERNAL_DATA_DIR / "cifar10/val_set.p"), "wb"),
     )
 
 
+download_mnist()
 download_cifar10_fashion()
