@@ -22,11 +22,6 @@ class SqlAlchemyPostgresWarehouse:
         Session = sessionmaker(bind=self._engine)
         self.session = Session()
 
-    def create_pandas_table(self, sql_query: str):
-        """Function that takes in a PostgreSQL query and outputs a pandas DataFrame."""
-        with self._engine.connect() as connection:
-            return pd.read_sql_query(sql_query, connection)
-
     @contextmanager
     def session_scope(self):
         Session = sessionmaker(bind=self._engine)

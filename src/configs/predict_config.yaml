@@ -2,9 +2,9 @@ ops:
   stream_and_predict:
     config:
       topic: 'DataTopic'
-      server: "kafka:9094"
-      batch_size: 10
+      batch_size: 2
       path_current_model: '/opt/dagster/app/models/mnist/initial_model.H5'
+      stream_timeout_ms: 30000
 resources:
   db:
     config:

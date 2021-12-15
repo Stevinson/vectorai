@@ -4,7 +4,7 @@ RUN apt-get update
 RUN apt-get -y upgrade
 RUN apt-get install -yq --no-install-recommends vim
 RUN pip3 install cython wheel setuptools dagit dagster dagster-cron dagster-docker dagster-postgres dagstermill
-RUN pip3 install kafka-python Keras mlflow numpy pandas scipy tensorboard tensorflow seaborn tensorflow_io
+RUN pip3 install kafka-python Keras mlflow numpy pandas scipy tensorboard tensorflow seaborn tensorflow_io google-cloud-pubsub tomlkit
 
 WORKDIR /opt/dagster/app
 

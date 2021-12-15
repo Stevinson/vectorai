@@ -103,4 +103,4 @@ def download_cifar10_fashion():
 
 
 download_mnist()
-download_cifar10_fashion()
+# download_cifar10_fashion()

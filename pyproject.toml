@@ -10,6 +10,7 @@ dagit = ">=0.13.9"
 dagster = ">=0.13.9"
 dagster-postgres = ">=0.13.9"
 dagstermill = ">=0.13.9"
+google-cloud-pubsub = "2.9.0"
 jupyter = "1.0.0"                               # BSD
 kafka-python = "*"
 keras = "*"
@@ -28,6 +29,7 @@ SQLAlchemy-Utils = "0.37.8"                     # BSD
 tensorflow = "*"
 tensorflow-io = "*"
 scipy = "1.7.3"
+tomlkit = "*"
 
 [tool.poetry.dev-dependencies]
 asynctest = "0.13.0"                            # Apache 2.0

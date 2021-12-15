@@ -25,12 +25,15 @@ There are 3 pipelines that can be triggered:
   * Logs loss, accuracy and epoch info to MLFlow
   * Saves the model
   * Batch size, image size, epochs, data paths are all configurable
-* Streaming data to Kafa:
+* Streaming data to Kafa or Google Pub/Sub:
   * Loads sample data from `/data/external/<directory_dataset_name>/stream_sample.p`
-  * Sends this data to Kafka
+  * Sends this data to the selected service
+  * On each run data can be either sent to Kafka or Pub/Sub, configurable in the stream_config.yaml
 * Prediction:
-  * Streams the data from Kafka to a tensorflow dataset
   * Loads the model
+  * Streams the data from Kafka and Pub/Sub
+  * `stream_timeout_ms` defines the time that the job will block and wait for new messages 
+    to arrive in the topics. 
   * Makes class predictions on the images
   * Saves the image, class prediction and timestamp to a database
 
@@ -41,6 +44,7 @@ NB. The following restrictions apply:
 * This has only been tested on Mac - though Docker should provide some level of interoperability
 * The implementation has been tested on mnist and cifar10 datasets with a focus on the 
   infrastructure. No effort has been made to optimise the classification performance.
+* Google Pub/Sub is hard-coded to a particular project to which you will need the credentials .json file 
 
 ## Setup Instructions
 
